@@ -1,6 +1,6 @@
 ## MiniPupper Teleop
 
-This project allows streaming video from [MiniPupper](https://minipupperdocs.readthedocs.io/en/latest/) via WebRTC and teleoperating it via ROS. Note that the [backend](https://github.com/sskorol/minipupper-teleop/tree/main/backend) expects you've already connected [OAK-D Lite](https://shop.luxonis.com/products/oak-d-lite-1) camera to your robot. If you don't have one yet, you can still teleoperate the robot via keyboard, but w/o a camera stream.
+This project allows streaming video from [MiniPupper](https://minipupperdocs.readthedocs.io/en/latest/) via WebRTC and teleoperating it via ROS. Note that the [backend](https://github.com/sskorol/minipupper-teleop/tree/main/backend) expects you've already connected [OAK-D Lite](https://shop.luxonis.com/products/oak-d-lite-1) camera to your robot. If you don't have one yet, you can still teleoperate the robot via keyboard, but w/o a camera stream. Also, note that technically you are not forced to use this project with MiniPupper only. It should work for any robot with OAK camera.
 
 ![pupper-teleop-demo](https://user-images.githubusercontent.com/6638780/183462753-844e2948-4093-493f-ab90-e769b0c69c30.gif)
 
@@ -35,7 +35,7 @@ Check the [official guide](https://docs.docker.com/engine/install/ubuntu/) if yo
 Clone the source code:
 
 ```shell
-git pull https://github.com/sskorol/minipupper-teleop.git && cd https://github.com/sskorol/minipupper-teleop.git
+git clone https://github.com/sskorol/minipupper-teleop.git && cd https://github.com/sskorol/minipupper-teleop.git
 ```
 
 Prepare calibration and env files:
@@ -85,6 +85,7 @@ docker compose logs -f
 ### ToDo
 
 - [ ] Polish FE and BE code
+- [ ] Add local deployment instructions
 - [ ] Push teleop and mini-pupper core sources
 - [ ] Migrate to ROS2
 - [ ] Get rid of velocity-smoother, which seems to cause most networking issues
