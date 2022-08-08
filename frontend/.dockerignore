@@ -6,3 +6,4 @@ build
 *.md
 .gitignore
 .env.defaults
+Dockerfile
