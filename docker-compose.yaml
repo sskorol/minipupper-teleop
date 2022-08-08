@@ -36,10 +36,10 @@ services:
     network_mode: host
     build: ./frontend
     environment:
-      - REACT_APP_ROSBRIDGE_SERVER_IP=192.168.0.11
+      - REACT_APP_ROSBRIDGE_SERVER_IP=$HOST_IP
       - REACT_APP_ROSBRIDGE_SERVER_PORT=9090
       - REACT_APP_RECONNECTION_TIMER=1000
-      - REACT_APP_BE_URL=http://192.168.0.11:8080
+      - REACT_APP_BE_URL=http://$HOST_IP:8080
     depends_on:
       - bridge
       - backend
