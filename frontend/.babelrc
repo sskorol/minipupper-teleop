@@ -1,7 +1,5 @@
 {
-  "presets": [
-    "react-app"
-  ],
+  "presets": ["react-app"],
   "plugins": [
     [
       "module:@import-meta-env/babel",
