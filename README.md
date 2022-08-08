@@ -10,6 +10,7 @@ This project allows streaming video from [MiniPupper](https://minipupperdocs.rea
   - [Running](#running)
   - [Building FE and BE](#building-fe-and-be)
   - [Known Issues](#known-issues)
+  - [ToDo](#todo)
 
 ### Modules
 
@@ -80,3 +81,12 @@ Run the following command on MiniPupper to diagnose potential errors in logs:
 ```shell
 docker compose logs -f
 ```
+
+### ToDo
+
+- [ ] Polish FE and BE code
+- [ ] Push teleop and mini-pupper core sources
+- [ ] Migrate to ROS2
+- [ ] Get rid of velocity-smoother, which seems to cause most networking issues
+- [ ] Add map for SLAM and navigation
+- [ ] Potentially integrate this code into MiniPupper repo
