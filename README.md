@@ -7,8 +7,8 @@ This project allows streaming video from [MiniPupper](https://minipupperdocs.rea
 - [MiniPupper Teleop](#minipupper-teleop)
   - [Modules](#modules)
   - [Installation](#installation)
-    - [Running](#running)
-    - [Building FE and BE](#building-fe-and-be)
+  - [Running](#running)
+  - [Building FE and BE](#building-fe-and-be)
   - [Known Issues](#known-issues)
 
 ### Modules
@@ -47,7 +47,7 @@ Adjust angles in `calibration_settings.yaml` to match your own robot's calibrati
 
 MiniPupper's IP is required for the FE container to be able to communicate with the BE via remote browser.
 
-#### Running
+### Running
 
 Run the following command to start a stack of docker images required to perform teleoperation:
 
@@ -59,7 +59,7 @@ An old docker cli uses a bit different syntax: `docker-compose up -d`.
 
 Open your web browser and go to: `http://[MINI_PUPPER_IP_ADDRESS]`
 
-#### Building FE and BE
+### Building FE and BE
 
 Run the following command on MiniPupper to build FE and BE images:
 
