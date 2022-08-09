@@ -23,8 +23,8 @@ The following diagram reflects the most recent implementation (note that the rea
 - **webrtc-be**: Python BE, which streams OAK-D Lite camera video to the remote browser via WebRTC (internally uses [DepthAI](https://docs.luxonis.com/projects/api/en/latest/index.html) API);
 - **teleop-fe**: ReactJS FE which uses [roslibjs](https://github.com/RobotWebTools/roslibjs) to communicate with ROS bridge and WebRTC API for camera streaming;
 - **servo-drv**: MiniPupper's servo driver node, which listens to CHAMP messages and changes joints' angles;
-- **vel-smoother/CHAMP**: [CHAMP](https://github.com/chvmp/champ) framework does the kinematics' stuff to control the robot's movements;
-- **teleop**: a slightly modified [teleop-legged-robots](https://github.com/SoftServeSAG/teleop_legged_robots) node to accept remote keys rather than local keyboard events.
+- **CHAMP/vel-smoother**: [CHAMP](https://github.com/chvmp/champ) framework controls the robot's movements;
+- **teleop**: a slightly modified [teleop-legged-robots](https://github.com/SoftServeSAG/teleop_legged_robots) node that accepts remote keys rather than local keyboard events.
 
 Note that `velocity-smoother` was intentionally splitted from `champ` due to netwroking issue mentioned in a [known issues](#known-issues) section.
 
@@ -35,7 +35,7 @@ Check the [official guide](https://docs.docker.com/engine/install/ubuntu/) if yo
 Clone the source code:
 
 ```shell
-git clone https://github.com/sskorol/minipupper-teleop.git && cd https://github.com/sskorol/minipupper-teleop.git
+git clone https://github.com/sskorol/minipupper-teleop.git && cd minipupper-teleop
 ```
 
 Prepare calibration and env files:
@@ -44,7 +44,9 @@ Prepare calibration and env files:
 ./generate_configs.sh [MINI_PUPPER_IP_ADDRESS]
 ```
 
-Adjust angles in `calibration_settings.yaml` to match your own robot's calibration data.
+Adjust angles in `calibration_settings.yaml` to match your own robot's calibration data. Note that MiniPupper's legs should be calibrated to 90 degress as on the following screenshot, as CHAMP framework automatically adjusts angles during bringup process to make your robot stand:
+
+![image](https://user-images.githubusercontent.com/6638780/183618832-c133ddef-484c-4974-b6e9-04f7e1d81e6e.png)
 
 MiniPupper's IP is required for the FE container to be able to communicate with the BE via remote browser.
 
