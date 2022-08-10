@@ -30,6 +30,8 @@ Note that `velocity-smoother` was intentionally splitted from `champ` due to net
 
 ### Installation
 
+The following [ROS image](https://drive.google.com/file/d/1Mk_bSmIvnN8EIzB8IilS9M4pofTUH9r2/view?usp=sharing) already comes with all the required drivers pre-installed. Just flash it to SD card and you are almost ready to go.
+
 Check the [official guide](https://docs.docker.com/engine/install/ubuntu/) if you don't have Docker yet. Note that you need both `docker` and `docker-compose` CLI tools installed on MiniPupper.
 
 Clone the source code:
@@ -55,7 +57,7 @@ MiniPupper's IP is required for the FE container to be able to communicate with 
 Run the following command to start a stack of docker images required to perform teleoperation:
 
 ```shell
-docker compose up -d
+docker compose pull && docker compose up -d
 ```
 
 An old docker cli uses a bit different syntax: `docker-compose up -d`.
