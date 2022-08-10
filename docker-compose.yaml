@@ -32,7 +32,7 @@ services:
       - PYTHONUNBUFFERED=1
 
   frontend:
-    image: sskorol/minipupper-fe:0.0.1
+    image: sskorol/minipupper-fe:0.0.2
     network_mode: host
     build: ./frontend
     environment:
@@ -45,7 +45,7 @@ services:
       - backend
 
   servo:
-    image: sskorol/minipupper-core:0.0.2
+    image: sskorol/minipupper-core:0.0.3
     privileged: true
     network_mode: host
     depends_on:
@@ -63,10 +63,10 @@ services:
       - roslaunch
       - --wait
       - mini_pupper
-      - bringup.launch
+      - no.smoother.bringup.launch
 
   smoother:
-    image: sskorol/minipupper-core:0.0.2
+    image: sskorol/minipupper-core:0.0.3
     network_mode: host
     depends_on:
       - master
@@ -79,7 +79,7 @@ services:
       - velocity_smoother.launch
 
   teleop:
-    image: sskorol/minipupper-core:0.0.2
+    image: sskorol/minipupper-core:0.0.3
     network_mode: host
     environment:
       - PYTHONUNBUFFERED=1

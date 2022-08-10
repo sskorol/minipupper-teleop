@@ -6,6 +6,6 @@ export const ROSBRIDGE_CONNECTION_URL = `ws://${ROSBRIDGE_SERVER_IP}:${ROSBRIDGE
 export const BE_URL = import.meta.env.REACT_APP_BE_URL || '127.0.0.1'
 export const RECONNECTION_TIMER = +(import.meta.env.REACT_APP_RECONNECTION_TIMER || 1000)
 export const KEY_TOPIC = import.meta.env.REACT_APP_KEY_TOPIC || '/key'
-export const TELEOP_TOPIC = import.meta.env.REACT_APP_TELEOP_TOPIC || '/teleop'
+export const TELEOP_TOPIC = import.meta.env.REACT_APP_TELEOP_TOPIC || '/teleop_status'
 export const KEY_MESSAGE_TYPE = 'std_msgs/String'
 export const TELEOP_MESSAGE_TYPE = 'std_msgs/Bool'
