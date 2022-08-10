@@ -53,7 +53,7 @@ services:
       - teleop
       - smoother
     volumes:
-      - ./calibration_settings.yaml:/root/minipupper_ws/servo_interface/config/calibration_settings.yaml
+      - ./calibration_settings.yaml:/root/minipupper_ws/src/servo_interface/config/calibration_settings.yaml
       - /sys/class/pwm/pwmchip0:/sys/class/pwm/pwmchip0
       - /sys/class/gpio:/sys/class/gpio
     environment:
