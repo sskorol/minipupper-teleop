@@ -2,7 +2,7 @@ import React, { createRef, Fragment, useEffect } from 'react'
 import { observable, computed, action } from 'mobx'
 import { observer } from 'mobx-react'
 import throttle from 'lodash.throttle'
-import { BUFFERING_LEEWAY, AUTO_HIDE_CONTROLS_TIME } from '../constants'
+import { BUFFERING_LEEWAY, AUTO_HIDE_CONTROLS_TIME, CameraType, IS_SIMULATION } from '../constants'
 import { formatTime } from '../util'
 
 import './style.css'
@@ -13,18 +13,13 @@ import VideoOverlay from '../VideoOverlay'
 import { WebRTC } from '../WebRtc'
 import RosController from '../RosController'
 
-const CameraType = {
-  RGB: 'rgb',
-  DEPTH: 'depth',
-}
-
 class VideoPlayer {
   @observable videoEl = createRef()
   @observable dataChannel = null
   @observable webrtcInstance = null
   @observable srcObject = null
   @observable displayTeleop = false
-  @observable selectedMode = CameraType.RGB
+  @observable selectedMode = !IS_SIMULATION ? CameraType.RGB : CameraType.SIMULATOR
   @observable useNN = false
   @observable showControls = false
   @observable isPlaying = false
