@@ -2,22 +2,22 @@
 
 This project allows streaming video from [MiniPupper](https://minipupperdocs.readthedocs.io/en/latest/) via WebRTC and teleoperating it via ROS. Note that the [backend](https://github.com/sskorol/minipupper-teleop/tree/main/backend) expects you've already connected [OAK-D Lite](https://shop.luxonis.com/products/oak-d-lite-1) camera to your robot. If you don't have one yet, you can still teleoperate the robot via keyboard, but w/o a camera stream. Also, note that technically you are not forced to use this project with MiniPupper only. It should work for any robot with OAK camera.
 
-![pupper-teleop-demo](https://user-images.githubusercontent.com/6638780/183462753-844e2948-4093-493f-ab90-e769b0c69c30.gif)
+<video src='https://user-images.githubusercontent.com/6638780/184704954-94f721f5-6219-48b2-9696-3da01e509eec.mp4'></video>
 
 - [MiniPupper Teleop](#minipupper-teleop)
-  - [Modules](#modules)
+  - [Architecture](#architecture)
   - [Installation](#installation)
-  - [Running](#running)
-  - [Simulated Environment](#simulated-environment)
+  - [Running on MiniPupper](#running-on-minipupper)
+  - [Simulated Environment](#running-in-simulated-environment)
   - [Building FE and BE](#building-fe-and-be)
   - [Known Issues](#known-issues)
   - [ToDo](#todo)
 
-### Modules
+### Architecture
 
-The following diagram reflects the most recent implementation (note that the real container names might be slightly different):
+The following diagram reflects the most recent implementation:
 
-![MiniPupper modules](https://user-images.githubusercontent.com/6638780/183448806-1c0e49bc-4ac5-4445-a1d6-ad5d2d861b4c.png)
+![RoboticsDiagram](https://user-images.githubusercontent.com/6638780/184701436-863ccb48-9bcd-44c4-ba8f-c6ebf35d10d9.png)
 
 - **roscore**: a master node that handles all the ROS requests;
 - **rosbridge**: WS proxy between FE and ROS that accepts messages (keys) from the remote browser and passes them to ROS nodes;
@@ -53,7 +53,14 @@ Adjust angles in `calibration_settings.yaml` to match your own robot's calibrati
 
 MiniPupper's IP is required for the FE container to be able to communicate with the BE via remote browser.
 
-### Running
+Use the following steps to relax your web-browser restrictions:
+
+- Open Chrome
+- Type `chrome://flags/` in the address bar and hit Enter
+- Enable `Insecure origins treated as secure` option, and type the IP address of your MiniPupper
+- Restart Chrome
+
+### Running on MiniPupper
 
 Run the following command to start a stack of docker images required to perform teleoperation:
 
@@ -65,15 +72,17 @@ An old docker cli uses a bit different syntax: `docker-compose up -d`.
 
 Open your web browser and go to: `http://[MINI_PUPPER_IP_ADDRESS]`
 
-### Simulated Environment
+### Running in simulated environment
 
 If you don't have a robot yet, you can still play with teleoperation locally in a simulated environment.
 
+<video src='https://user-images.githubusercontent.com/6638780/184704356-adb7c28c-87ed-4358-a8bd-3c4661f05b1c.mp4'></video>
+
 ```shell
-docker compose -f docker-compose.sim.yaml up -d
+docker compose -f docker-compose-sim.yaml pull && docker compose -f docker-compose-sim.yaml up -d
 ```
 
-Then open your browser on localhost, wait until teleop is ready, select `SIM` option, and you're good to go.
+Then open your web-browser on a localhost, wait until teleop is ready, select `SIM` option, and you're good to go.
 
 ![Simulation](https://user-images.githubusercontent.com/6638780/184625088-de6727c2-edcf-49b9-a4c6-a84a0d064ddf.png)
 
@@ -85,7 +94,7 @@ Run the following command on MiniPupper to build FE and BE images:
 docker compose build
 ```
 
-### Known Issues
+### Known issues
 
 In rare cases `teleop`, `smoother` and `servo` nodes can't correctly publish/subscribe to `/cmd_vel` topic due to registration failure. The current workaround is displayed on the following diagram.
 
