@@ -1,33 +1,34 @@
-import logging
+from __future__ import annotations
+
 import uuid
 
-from typing import Callable
+from typing import Callable, Optional
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCDataChannel, RTCRtpTransceiver
 from fastapi import HTTPException
-from mini_pupper_webrtc.dto.data_channel_message import DataChannelMessage
-from mini_pupper_webrtc.dto.data_channel_message_type import DataChannelMessageType
-from mini_pupper_webrtc.dto.data_channel_payload import DataChannelPayload
 
 from mini_pupper_webrtc.dto.offer_payload import OfferPayload
+from .ros_bridge import RosBridge
 
 from .camera_type import CameraType
 from .datachannel import DataChannel
 from .event_type import EventType
 from .ice_connection_state import IceConnectionState
 from .tranciever_kind import TrancieverKind
-from .transformers import DepthAIDepthVideoTransformTrack, DepthAIVideoTransformTrack, VideoTransformTrack
+from .transformers import DepthAIDepthVideoTransformTrack, DepthAIVideoTransformTrack, SimulatorVideoTransformTrack, \
+    VideoTransformTrack
 from .uvicorn_logger import logger
 from ..dto.webrtc_response import WebRTCResponse
 
 
 class PeerConnection(RTCPeerConnection):
-    def __init__(self, offer_payload: OfferPayload, on_close: Callable[[RTCPeerConnection], None]):
+    def __init__(self, ros_bridge: RosBridge, offer_payload: OfferPayload, on_close: Callable[[PeerConnection], None]):
         super().__init__()
+        self.ros_bridge = ros_bridge
         self.offer_payload = offer_payload
         self.options = self.offer_payload.options
         self.on_close = on_close
-        self.channel: DataChannel = None
-        self.track: VideoTransformTrack = None
+        self.channel: Optional[DataChannel] = None
+        self.track: Optional[VideoTransformTrack] = None
         self.id = f"PeerConnection({uuid.uuid4()})"
         self.on(
             EventType.ICE_CONNECTION_STATE_CHANGE,
@@ -56,7 +57,8 @@ class PeerConnection(RTCPeerConnection):
         if self.iceConnectionState == IceConnectionState.FAILED:
             await self.cleanup()
 
-    def on_track(self, track: RTCRtpTransceiver):
+    @staticmethod
+    def on_track(track: RTCRtpTransceiver):
         logger.info(f"{track.kind.upper()} track received")
 
     def on_data_channel(self, channel: RTCDataChannel):
@@ -70,6 +72,8 @@ class PeerConnection(RTCPeerConnection):
                 self.track = DepthAIVideoTransformTrack(self.options)
             elif camera_type == CameraType.DEPTH:
                 self.track = DepthAIDepthVideoTransformTrack(self.options)
+            elif camera_type == CameraType.SIMULATOR:
+                self.track = SimulatorVideoTransformTrack(self.ros_bridge, self.options)
             else:
                 logger.error(f'Unsupported camera type: {camera_type}')
         except RuntimeError as e:
@@ -81,7 +85,7 @@ class PeerConnection(RTCPeerConnection):
             self.addTrack(self.track)
 
     async def cleanup(self):
-        if (self.track):
+        if self.track:
             self.track.stop()
         await self.close()
         self.on_close(self)

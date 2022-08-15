@@ -9,3 +9,12 @@ export const KEY_TOPIC = import.meta.env.REACT_APP_KEY_TOPIC || '/key'
 export const TELEOP_TOPIC = import.meta.env.REACT_APP_TELEOP_TOPIC || '/teleop_status'
 export const KEY_MESSAGE_TYPE = 'std_msgs/String'
 export const TELEOP_MESSAGE_TYPE = 'std_msgs/Bool'
+export const CameraType = {
+    DEPTH: 'depth',
+    RGB: 'rgb',
+    SIMULATOR: 'simulator'
+}
+export const NNType = {
+    MOBILENET_SSD: 'mobilenet-ssd',
+    NONE: ''
+}

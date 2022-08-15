@@ -25,8 +25,8 @@ const CameraControls = observer(() => {
             sx={{
               color: lightBlue[800],
               '&.Mui-checked': {
-                color: lightBlue[600],
-              },
+                color: lightBlue[600]
+              }
             }}
           />
         }
@@ -48,6 +48,7 @@ const CameraControls = observer(() => {
         >
           {cameraLabel('rgb')}
           {cameraLabel('depth')}
+          {cameraLabel('sim')}
         </RadioGroup>
       </FormControl>
     </Fragment>
