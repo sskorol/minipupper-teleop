@@ -8,6 +8,7 @@ This project allows streaming video from [MiniPupper](https://minipupperdocs.rea
   - [Modules](#modules)
   - [Installation](#installation)
   - [Running](#running)
+  - [Simulated Environment](#simulated-environment)
   - [Building FE and BE](#building-fe-and-be)
   - [Known Issues](#known-issues)
   - [ToDo](#todo)
@@ -64,6 +65,18 @@ An old docker cli uses a bit different syntax: `docker-compose up -d`.
 
 Open your web browser and go to: `http://[MINI_PUPPER_IP_ADDRESS]`
 
+### Simulated Environment
+
+If you don't have a robot yet, you can still play with teleoperation locally in a simulated environment.
+
+```shell
+docker compose -f docker-compose.sim.yaml up -d
+```
+
+Then open your browser on localhost, wait until teleop is ready, select `SIM` option, and you're good to go.
+
+![Simulation](https://user-images.githubusercontent.com/6638780/184625088-de6727c2-edcf-49b9-a4c6-a84a0d064ddf.png)
+
 ### Building FE and BE
 
 Run the following command on MiniPupper to build FE and BE images:
@@ -90,6 +103,7 @@ docker compose logs -f
 
 - [ ] Polish FE and BE code
 - [ ] Add local deployment instructions
+- [ ] Add docker-cross builds
 - [ ] Push teleop and mini-pupper core sources
 - [ ] Migrate to ROS2
 - [ ] Get rid of velocity-smoother, which seems to cause most networking issues

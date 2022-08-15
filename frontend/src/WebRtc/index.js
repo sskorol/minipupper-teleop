@@ -1,6 +1,7 @@
-import { BE_URL } from '../constants'
+import {BE_URL, CameraType, NNType} from '../constants'
 import rgb from './mobilenet-ssd.json'
 import depth from './depth.json'
+import simulator from './simulator.json'
 
 export class WebRTC {
   constructor(setWebRTCStatus) {
@@ -39,7 +40,9 @@ export class WebRTC {
       body: JSON.stringify({
         sdp: this.pc.localDescription.sdp,
         type: this.pc.localDescription.type,
-        options: selectedMode === 'rgb' ? { ...rgb, nn_model: nn ? 'mobilenet-ssd' : '' } : depth,
+        options: selectedMode === CameraType.RGB
+            ? { ...rgb, nn_model: nn ? NNType.MOBILENET_SSD : NNType.NONE }
+            : selectedMode === CameraType.DEPTH ? depth : simulator
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +56,7 @@ export class WebRTC {
       return this.pc.setRemoteDescription(answer)
     }
 
-    throw new Error(`Unable to start a stream: ${answer.detail}`)
+    throw new Error(`Unable to start a stream: ${JSON.stringify(answer.detail)}`)
   }
 
   async start(selectedMode, nn) {

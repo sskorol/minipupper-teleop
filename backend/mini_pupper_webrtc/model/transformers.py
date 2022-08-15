@@ -1,3 +1,4 @@
+import base64
 import cv2
 import depthai as dai
 import blobconverter
@@ -6,6 +7,7 @@ import numpy as np
 from aiortc import VideoStreamTrack
 from av import VideoFrame
 
+from .ros_bridge import RosBridge
 from .camera_resolution import CameraResolution
 from .median_filter import MedianFilter
 from .options import Options
@@ -45,7 +47,7 @@ class VideoTransformTrack(VideoStreamTrack):
         ]
 
     def get_label(self, idx):
-        self.labels[idx]
+        return self.labels[idx]
 
     @property
     def zero_frame(self):
@@ -53,7 +55,7 @@ class VideoTransformTrack(VideoStreamTrack):
         frame[:] = (0, 0, 0)
         return frame
 
-    async def get_frame(self):
+    def get_frame(self):
         raise NotImplementedError('Unable to fetch frame data')
 
     async def return_frame(self, frame):
@@ -63,10 +65,10 @@ class VideoTransformTrack(VideoStreamTrack):
         new_frame.time_base = time_base
         return new_frame
 
-    async def dummy_recv(self):
+    def offline_frame(self):
         frame = self.zero_frame
         y, x = frame.shape[0] / 2, frame.shape[1] / 2
-        left, top, right, bottom = int(x - 50), int(y - 30), int(x + 50), int(y + 30)
+        left, top, right, bottom = int(x - 50), int(y - 30), int(x + 75), int(y + 75)
         cv2.rectangle(
             frame, (left, top),
             (right, bottom),
@@ -75,27 +77,57 @@ class VideoTransformTrack(VideoStreamTrack):
         )
         cv2.putText(
             frame,
-            "ERROR",
+            "OFFLINE",
             (left, int((bottom + top) / 2 + 10)),
             cv2.FONT_HERSHEY_DUPLEX,
             1.0,
             (255, 255, 255),
             1
         )
-        return await self.return_frame(frame)
+        return frame
+
+    async def dummy_recv(self):
+        return await self.return_frame(self.offline_frame())
 
     async def recv(self):
         if self.dummy:
             return await self.dummy_recv()
 
         try:
-            frame = await self.get_frame()
+            frame = self.get_frame()
             return await self.return_frame(frame)
         except Exception as e:
             logger.error(e)
             logger.info('Switching to dummy mode...')
             self.dummy = True
             return await self.dummy_recv()
+
+
+class SimulatorVideoTransformTrack(VideoTransformTrack):
+
+    def __init__(self, ros_bridge: RosBridge, options: Options):
+        super().__init__(options)
+        self.img = self.offline_frame()
+        self.ros_bridge = ros_bridge
+        # ToDo: think about multiple subscribers feature, move constants to env vars
+        self.ros_bridge.subscribe(
+            '/camera/color/image_raw/compressed',
+            'sensor_msgs/CompressedImage',
+            self.receive_image
+        )
+
+    def receive_image(self, msg):
+        base64_bytes = msg['data'].encode('ascii')
+        image_bytes = base64.b64decode(base64_bytes)
+        jpg_as_np = np.frombuffer(image_bytes, dtype=np.uint8)
+        self.img = cv2.imdecode(jpg_as_np, flags=1)
+
+    def get_frame(self):
+        return self.img
+
+    def stop(self):
+        super().stop()
+        self.ros_bridge.unsubscribe()
 
 
 class DepthAIVideoTransformTrack(VideoTransformTrack):
@@ -115,7 +147,7 @@ class DepthAIVideoTransformTrack(VideoTransformTrack):
         # Linking
         self.camRgb.preview.link(self.xoutRgb.input)
         self.nn = None
-        
+
         if options.nn_model != "":
             self.nn = self.pipeline.create(dai.node.MobileNetDetectionNetwork)
             self.nn.setConfidenceThreshold(0.5)
@@ -134,7 +166,7 @@ class DepthAIVideoTransformTrack(VideoTransformTrack):
 
         self.device.startPipeline()
 
-    async def get_frame(self):
+    def get_frame(self):
         frame = self.qRgb.tryGet()
         if frame:
             self.frame = frame.getCvFrame()
@@ -174,7 +206,7 @@ class DepthAIVideoTransformTrack(VideoTransformTrack):
         if self.device:
             self.device.close()
         self.device = None
-    
+
     def frameNorm(self, frame, bbox):
         normVals = np.full(len(bbox), frame.shape[0])
         normVals[::2] = frame.shape[1]
@@ -252,7 +284,7 @@ class DepthAIDepthVideoTransformTrack(VideoTransformTrack):
 
         return self.pipeline
 
-    async def get_frame(self):
+    def get_frame(self):
         inDepth = self.qDepth.tryGet()
         if inDepth is not None:
             frame = inDepth.getFrame()

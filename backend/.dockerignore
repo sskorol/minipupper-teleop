@@ -3,3 +3,4 @@ __pycache__
 .git
 Dockerfile
 docker-run.sh
+.vscode
