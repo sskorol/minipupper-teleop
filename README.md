@@ -76,15 +76,13 @@ Open your web browser and go to: `http://[MINI_PUPPER_IP_ADDRESS]`
 
 If you don't have a robot yet, you can still play with teleoperation locally in a simulated environment.
 
-<video src='https://user-images.githubusercontent.com/6638780/184704356-adb7c28c-87ed-4358-a8bd-3c4661f05b1c.mp4'></video>
+<video src='https://user-images.githubusercontent.com/6638780/184727365-927b5755-99b4-4098-9010-52444ad33856.mp4'></video>
 
 ```shell
 docker compose -f docker-compose-sim.yaml pull && docker compose -f docker-compose-sim.yaml up -d
 ```
 
-Then open your web-browser on a localhost, wait until teleop is ready, select `SIM` option, and you're good to go.
-
-![Simulation](https://user-images.githubusercontent.com/6638780/184625088-de6727c2-edcf-49b9-a4c6-a84a0d064ddf.png)
+Then open your web-browser on a localhost, wait until teleop is ready, and you're good to go.
 
 ### Building FE and BE
 

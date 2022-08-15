@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import { useStore } from '../../../store'
 import { lightBlue } from '@mui/material/colors'
 import { Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material'
+import { IS_SIMULATION } from '../../../constants'
 
 const CameraControls = observer(() => {
   const { setMode, selectedMode, setNN } = useStore()
@@ -46,9 +47,13 @@ const CameraControls = observer(() => {
           value={selectedMode}
           onChange={handleCameraModeChange}
         >
-          {cameraLabel('rgb')}
-          {cameraLabel('depth')}
-          {cameraLabel('sim')}
+          {!IS_SIMULATION ?
+            <Fragment>
+              {cameraLabel('rgb')}
+              {cameraLabel('depth')}
+            </Fragment> : null
+          }
+          {cameraLabel('simulator')}
         </RadioGroup>
       </FormControl>
     </Fragment>
