@@ -1,5 +1,7 @@
 ## MiniPupper Teleop
 
+![Build Status](https://github.com/sskorol/minipupper-teleop/actions/workflows/main.yml/badge.svg?branch=main)
+
 This project allows streaming video from [MiniPupper](https://minipupperdocs.readthedocs.io/en/latest/) via WebRTC and teleoperating it via ROS. Note that the [backend](https://github.com/sskorol/minipupper-teleop/tree/main/backend) expects you've already connected [OAK-D Lite](https://shop.luxonis.com/products/oak-d-lite-1) camera to your robot. If you don't have one yet, you can still teleoperate the robot via keyboard, but w/o a camera stream. Also, note that technically you are not forced to use this project with MiniPupper only. It should work for any robot with OAK camera.
 
 <video src='https://user-images.githubusercontent.com/6638780/184704954-94f721f5-6219-48b2-9696-3da01e509eec.mp4'></video>
