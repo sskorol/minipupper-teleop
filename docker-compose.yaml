@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   master:
-    image: sskorol/rosmaster:0.0.1
+    image: sskorol/rosmaster:latest
     network_mode: host
     command:
       - roscore
 
   bridge:
-    image: sskorol/rosmaster:0.0.1
+    image: sskorol/rosmaster:latest
     network_mode: host
     environment:
       - ROS_MASTER_URI=http://localhost:11311
@@ -21,7 +21,7 @@ services:
       - rosbridge_websocket.launch
 
   backend:
-    image: sskorol/minipupper-be:0.0.1
+    image: sskorol/minipupper-be:latest
     network_mode: host
     build: ./backend
     volumes:
@@ -32,7 +32,7 @@ services:
       - PYTHONUNBUFFERED=1
 
   frontend:
-    image: sskorol/minipupper-fe:0.0.2
+    image: sskorol/minipupper-fe:latest
     network_mode: host
     build: ./frontend
     environment:
@@ -45,7 +45,7 @@ services:
       - backend
 
   servo:
-    image: sskorol/minipupper-core:0.0.3
+    image: sskorol/minipupper-core:latest
     privileged: true
     network_mode: host
     depends_on:
@@ -66,7 +66,7 @@ services:
       - no.smoother.bringup.launch
 
   smoother:
-    image: sskorol/minipupper-core:0.0.3
+    image: sskorol/minipupper-core:latest
     network_mode: host
     depends_on:
       - master
@@ -79,7 +79,7 @@ services:
       - velocity_smoother.launch
 
   teleop:
-    image: sskorol/minipupper-core:0.0.3
+    image: sskorol/minipupper-core:latest
     network_mode: host
     environment:
       - PYTHONUNBUFFERED=1
