@@ -1,5 +1,5 @@
 import React, { createRef, Fragment, useEffect } from 'react'
-import { observable, computed, action } from 'mobx'
+import { observable, computed, action, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import throttle from 'lodash.throttle'
 import { BUFFERING_LEEWAY, AUTO_HIDE_CONTROLS_TIME, CameraType, IS_SIMULATION } from '../constants'
@@ -44,6 +44,7 @@ class VideoPlayer {
   @observable isTeleopReady = false
 
   constructor() {
+    makeObservable(this)
     this.rosController = new RosController(this.setIsWSConnected, this.setIsTeleopReady)
     this.autoHideControlsTimer = null
   }
