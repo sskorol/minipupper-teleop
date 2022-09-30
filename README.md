@@ -81,7 +81,12 @@ If you don't have a robot yet, you can still play with teleoperation locally in 
 <video src='https://user-images.githubusercontent.com/6638780/184727365-927b5755-99b4-4098-9010-52444ad33856.mp4'></video>
 
 ```shell
-docker compose -f docker-compose-sim.yaml pull && docker compose -f docker-compose-sim.yaml up -d
+# Required for running Gazebo in container
+xhost +local:docker
+# Download images
+docker compose -f docker-compose-sim.yaml pull
+# Run services required for simulation
+docker compose -f docker-compose-sim.yaml up -d
 ```
 
 Then open your web-browser on a localhost, wait until teleop is ready, and you're good to go.
@@ -94,11 +99,50 @@ Run the following command on MiniPupper to build FE and BE images:
 docker compose build
 ```
 
+### Local deployment
+
+Install backend dependencies:
+```shell
+cd ./backend && python3 venv .venv
+source .venv/bin/activate && pip3 install pip --upgrade && pip3 install -r requirements.txt
+```
+
+Start backend:
+```shell
+./run.sh
+```
+
+Install frontend dependencies:
+```shell
+cd ../frontend && npm install
+```
+
+Prepare `.env` with required environment variables:
+```shell
+cp .env.example .env
+```
+
+Here are sample values:
+```properties
+REACT_APP_ROSBRIDGE_SERVER_IP=localhost
+REACT_APP_ROSBRIDGE_SERVER_PORT=9090
+REACT_APP_RECONNECTION_TIMER=1000
+REACT_APP_BE_URL=http://localhost:8080
+REACT_APP_IS_SIMULATION=true
+```
+
+Start frontend:
+```shell
+npm run start
+```
+
+Go to [http://localhost:3000](http://localhost:3000) to see the web UI.
+
+Note that frontend and backend depend on the ROS bridge and a custom teleop node. Make sure you've started them beforehand.
+
 ### Known issues
 
 In rare cases `teleop`, `smoother` and `servo` nodes can't correctly publish/subscribe to `/cmd_vel` topic due to registration failure. The current workaround is displayed on the following diagram.
-
-![Docker networking issue](https://user-images.githubusercontent.com/6638780/183454585-49ca757e-a932-4dbe-a5ba-95007cfaafec.png)
 
 You can try to restart docker images to see if it helps. I couldn't yet found the root cause of these Docker <---> ROS networking issues. Feel free to contact [author](mailto:serhii.s.korol@gmail.com) if you have any idea on how to stabilize it.
 
@@ -110,8 +154,9 @@ docker compose logs -f
 
 ### ToDo
 
-- [ ] Polish FE and BE code
-- [ ] Add local deployment instructions
+- [x] Polish FE code
+- [ ] Polish BE code
+- [x] Add local deployment instructions
 - [ ] Add docker-cross builds
 - [ ] Push teleop and mini-pupper core sources
 - [ ] Migrate to ROS2

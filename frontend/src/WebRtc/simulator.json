@@ -1,4 +1,6 @@
 {
   "camera_type": "simulator",
-  "mono_camera_resolution": "THE_480_P"
+  "mono_camera_resolution": "THE_800_P",
+  "cam_width": "1920",
+  "cam_height": "1080"
 }
